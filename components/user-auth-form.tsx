@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { createClient } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -14,6 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
+
+// Initialize Supabase Client
+const supabaseUrl = "https://yjjhlyylhbksgajqqxug.supabase.co";
+const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqamhseXlsaGJrc2dhanFxeHVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDI5MTI1NjUsImV4cCI6MjAxODQ4ODU2NX0.tshByTVtjFHw-kmtkPd8G9GVbVbddy2TU5QtWiSffsg";
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -28,32 +34,61 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     resolver: zodResolver(userAuthSchema),
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
   const searchParams = useSearchParams();
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
 
-    const signInResult = await signIn("email", {
-      email: data.email.toLowerCase(),
-      redirect: false,
-      callbackUrl: searchParams?.get("from") || "/dashboard",
+    const signInResult = await supabase.auth.signInWithOtp({
+      email: data.email,
+      options: {
+        // set this to false if you do not want the user to be automatically signed up
+        shouldCreateUser: false,
+        emailRedirectTo: "/",
+      },
     });
 
     setIsLoading(false);
+    // if sign in failed, show an error
 
-    if (!signInResult?.ok) {
+    console.error(signInResult);
+    if (!signInResult.error) {
       return toast({
+        title: "Check your email",
+        description:
+          "We sent you a login link. Be sure to check your spam too.",
+      });
+    }
+
+    // If sign in failed (error exists), show an error toast
+    return toast({
+      title: "Something went wrong.",
+      description: "Your sign in request failed. Please try again.",
+      variant: "destructive",
+    });
+  }
+
+  async function onGoogleSignIn() {
+    setIsGoogleLoading(true);
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
+      },
+    });
+
+    setIsGoogleLoading(false);
+    if (error) {
+      toast({
         title: "Something went wrong.",
         description: "Your sign in request failed. Please try again.",
         variant: "destructive",
       });
     }
-
-    return toast({
-      title: "Check your email",
-      description: "We sent you a login link. Be sure to check your spam too.",
-    });
   }
 
   return (
@@ -71,7 +106,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              disabled={isLoading || isGitHubLoading}
+              disabled={isLoading || isGoogleLoading}
               {...register("email")}
             />
             {errors?.email && (
@@ -101,18 +136,16 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <button
         type="button"
         className={cn(buttonVariants({ variant: "outline" }))}
-        onClick={() => {
-          setIsGitHubLoading(true);
-          signIn("github");
-        }}
-        disabled={isLoading || isGitHubLoading}
+        onClick={onGoogleSignIn}
+        disabled={isLoading || isGoogleLoading}
       >
-        {isGitHubLoading ? (
+        {isGoogleLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
-          <Icons.gitHub className="mr-2 h-4 w-4" />
-        )}{" "}
-        Github
+          // Replace this with a Google icon
+          <Icons.google className="mr-2 h-4 w-4" />
+        )}
+        Google
       </button>
     </div>
   );
