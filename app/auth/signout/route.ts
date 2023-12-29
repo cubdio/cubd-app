@@ -1,21 +1,24 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { type NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers' // Import cookies utility from Next.js for cookie handling
+import { type NextRequest, NextResponse } from 'next/server' // Import types and utilities for handling requests and responses in Next.js
 
-export async function POST(req: NextRequest) {
-  const cookieStore = cookies()
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+// Define an asynchronous POST function that will handle the POST requests
+export async function POST(request: NextRequest) {
+  const cookieStore = cookies() // Create a cookie store to manage cookies
+  const supabase = createClient(cookieStore) // Initialize the Supabase client with the cookie store
 
-  // Check if we have a session
+  // Attempt to get the current session from Supabase
   const {
     data: { session },
   } = await supabase.auth.getSession()
 
+  // If a session exists, sign the user out
   if (session) {
     await supabase.auth.signOut()
   }
 
-  return NextResponse.redirect(new URL('/', req.url), {
-    status: 302,
+  // Redirect the user to the home page after signing out
+  return NextResponse.redirect(new URL('/', request.url), {
+    status: 302, // Use a 302 HTTP status code for the redirection
   })
 }

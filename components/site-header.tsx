@@ -18,7 +18,7 @@ export function SiteHeader() {
           {/* Inner container holding the elements*/}
           <nav className="flex items-center space-x-4">
             <Button variant="secondary">
-              <Link href="/login">Login</Link>
+              <Link href="/auth/login">Login</Link>
             </Button>
             {/* <Button>
               <Link href="/signup">Sign Up</Link>

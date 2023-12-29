@@ -5,19 +5,29 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  CreditCard,
+  FileText,
   Loader2,
+  Settings,
+  ArrowRight,
+  User,
   type Icon as LucideIcon,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
 
 export const Icons = {
+  arrowRight: ArrowRight,
   sun: SunMedium,
   moon: Moon,
   check: Check,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
+  billing: CreditCard,
+  post: FileText,
+  settings: Settings,
   spinner: Loader2,
+  user: User,
   twitter: (props: LucideProps) => (
     <svg
       {...props}

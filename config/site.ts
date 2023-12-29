@@ -3,6 +3,7 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
   name: "cubd",
   description: "Looker Studio connectors, templates, guides and more.",
+  url: "http://localhost:3000/",
   mainNav: [
     {
       title: "Home",

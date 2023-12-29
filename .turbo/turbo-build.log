@@ -1,0 +1,17 @@
+
+> cubd-app@0.1.0 build /Users/zakcasey/Documents/cubd/cubd-app
+> next build
+
+   ▲ Next.js 14.0.4
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+Failed to compile.
+
+app/page.tsx
+Type error: Page "app/page.tsx" has an invalid "default" export:
+  Type "{ children: ReactNode; }" is not valid.
+
+ ELIFECYCLE  Command failed with exit code 1.
