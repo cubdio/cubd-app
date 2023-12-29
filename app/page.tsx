@@ -6,7 +6,7 @@ import { Announcement } from "@/components/announcement";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
-export default function IndexPage({ children }: { children: React.ReactNode }) {
+export default function IndexPage() {
   return (
     <>
       <SiteHeader />

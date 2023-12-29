@@ -84,7 +84,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       provider: "google",
       options: {
         queryParams: {
-          redirectTo: "http://localhost:3000/auth/callback",
+          redirectTo: "${origin}/auth/callback",
         },
       },
     });
