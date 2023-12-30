@@ -66,7 +66,5 @@ export type UserSubscriptionPlan = SubscriptionPlan &
 
 export type User = {
   id: uuid
-  full_name: string
   email: string
-  avatar_url: string
 }

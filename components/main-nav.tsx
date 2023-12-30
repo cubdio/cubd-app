@@ -3,6 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { MainNavItem } from "@/types";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 // cn is a utility function that combines class names
 import { cn } from "@/lib/utils";
@@ -56,7 +58,15 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ];
 
-export function MainNav() {
+interface MainNavProps {
+  items?: MainNavItem[];
+  children?: React.ReactNode;
+}
+
+export function MainNav({ items, children }: MainNavProps) {
+  const segment = useSelectedLayoutSegment();
+  const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
+
   return (
     <div className="flex gap-6 md:gap-10">
       <Link href="/" className="flex items-center space-x-2">

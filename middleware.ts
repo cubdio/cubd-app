@@ -1,38 +1,31 @@
-import { NextResponse, type NextRequest } from 'next/server'
-import { createClient } from '@/lib/supabase/middleware'
+// Import required modules from Next.js and Supabase middleware
+import { type NextRequest } from 'next/server';
+import { createClient } from '@/lib/supabase/middleware';
 
+// Define the middleware function for Next.js
 export async function middleware(request: NextRequest) {
-  try {
-    // This `try/catch` block is only here for the interactive tutorial.
-    // Feel free to remove once you have Supabase connected.
-    const { supabase, response } = createClient(request)
+  // Create a Supabase client for the current request
+  const { supabase, response } = createClient(request);
 
-    // Refresh session if expired - required for Server Components
-    // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-session-with-middleware
-    await supabase.auth.getSession()
+  // Refresh the Supabase authentication session if it's expired.
+  // This is important for server-side rendering with authentication.
+  // The getSession method checks the current session and refreshes it if needed.
+  await supabase.auth.getSession();
 
-    return response
-  } catch (e) {
-    // If you are here, a Supabase client could not be created!
-    // This is likely because you have not set up environment variables.
-    // Check out http://localhost:3000 for Next Steps.
-    return NextResponse.next({
-      request: {
-        headers: request.headers,
-      },
-    })
-  }
+  // Return the response object, which is used in the Next.js middleware pipeline.
+  return response;
 }
 
+// Configuration for the middleware
 export const config = {
+  // Define URL patterns that this middleware should match.
+  // It will match all paths except for the ones specified in the pattern.
+  // The pattern excludes:
+  // - _next/static (static files)
+  // - _next/image (image optimization files)
+  // - favicon.ico (favicon file)
+  // Modify the pattern as needed to include or exclude additional paths.
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
-}
+};

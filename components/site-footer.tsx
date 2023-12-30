@@ -1,7 +1,7 @@
 import { siteConfig } from "@/config/site";
 import { ThemeToggle } from "./theme-toggle";
 
-export function SiteFooter() {
+export function SiteFooter({ className }: { className?: string }) {
   return (
     <footer className="py-6 md:px-1 md:py-0">
       <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">

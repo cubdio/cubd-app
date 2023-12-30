@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { siteConfig } from "@/config/site";
 import { buttonVariants } from "@/components/ui/button";
 import { Announcement } from "@/components/announcement";
 import { SiteHeader } from "@/components/site-header";

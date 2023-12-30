@@ -16,10 +16,6 @@ export const metadata = {
 export default async function DashboardPage() {
   const user = await getCurrentUser();
 
-  if (!user) {
-    redirect("/login");
-  }
-
   return (
     <DashboardShell>
       <DashboardHeader
@@ -27,7 +23,7 @@ export default async function DashboardPage() {
         text="Create and manage posts."
       ></DashboardHeader>
       <EmptyPlaceholder>
-        {/* <EmptyPlaceholder.Icon name="post" /> */}
+        <EmptyPlaceholder.Icon name="post" />
         <EmptyPlaceholder.Title>No posts created</EmptyPlaceholder.Title>
         <EmptyPlaceholder.Description>
           You don&apos;t have any posts yet. Start creating content.
